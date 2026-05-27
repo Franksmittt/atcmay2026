@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alberton Tyre Clinic — Social Media Calendar</title>
+  <style>
+    :root {
+      --orange: #f97316;
+      --orange-dark: #ea580c;
+      --black: #0f0f0f;
+      --gray-900: #171717;
+      --gray-800: #262626;
+      --gray-700: #404040;
+      --gray-500: #737373;
+      --gray-200: #e5e5e5;
+      --white: #ffffff;
+      --green: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--black);
+      color: var(--white);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--gray-900) 0%, var(--black) 100%);
+      border-bottom: 3px solid var(--orange);
+      padding: 2rem 1.5rem;
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .header h1 span {
+      color: var(--orange);
+    }
+
+    .header p {
+      color: var(--gray-500);
+      font-size: 0.95rem;
+    }
+
+    .stats {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      background: var(--gray-800);
+      border: 1px solid var(--gray-700);
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .stat strong {
+      color: var(--orange);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .post-card {
+      background: var(--gray-900);
+      border: 1px solid var(--gray-800);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .post-card:hover {
+      border-color: var(--orange);
+      transform: translateY(-2px);
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.25rem;
+      background: var(--gray-800);
+      border-bottom: 1px solid var(--gray-700);
+    }
+
+    .post-number {
+      background: var(--orange);
+      color: var(--black);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .post-date {
+      text-align: right;
+    }
+
+    .post-date .day {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .post-date .time {
+      color: var(--orange);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .post-image-wrap {
+      position: relative;
+      background: var(--black);
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+
+    .post-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-body {
+      padding: 1.25rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .caption-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-500);
+      font-weight: 600;
+    }
+
+    .caption-box {
+      background: var(--black);
+      border: 1px solid var(--gray-700);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-size: 0.9rem;
+      color: var(--gray-200);
+      min-height: 100px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .caption-box.placeholder {
+      color: var(--gray-500);
+      font-style: italic;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: auto;
+    }
+
+    .btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-download {
+      background: var(--gray-700);
+      color: var(--white);
+    }
+
+    .btn-download:hover {
+      background: var(--gray-500);
+    }
+
+    .btn-copy {
+      background: var(--orange);
+      color: var(--black);
+    }
+
+    .btn-copy:hover {
+      background: var(--orange-dark);
+    }
+
+    .btn-copy.copied {
+      background: var(--green);
+      color: var(--white);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--green);
+      color: var(--white);
+      padding: 0.85rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: transform 0.3s, opacity 0.3s;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 480px) {
+      .actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <h1>Alberton <span>Tyre</span> Clinic</h1>
+      <p>Social Media Posting Calendar — May / June 2026</p>
+      <div class="stats">
+        <div class="stat"><strong>5</strong> posts scheduled</div>
+        <div class="stat">Post time: <strong>10:00 AM</strong> daily</div>
+        <div class="stat">27 May — 1 June 2026</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="calendar-grid" id="calendar"></div>
+  </main>
+
+  <div class="toast" id="toast">Caption copied!</div>
+
+  <script>
+    const posts = [
+      {
+        number: 1,
+        date: "Wednesday, 27 May 2026",
+        shortDate: "27 May",
+        image: "understanding-market-value-is-your-power_page-0001.jpg",
+        downloadName: "atc_27May.jpg",
+        caption: `Don’t let poor alignment or a slow puncture compromise your safety on the road. At Alberton Tyre Clinic, expert tyre care isn't just a service; it's our standard. From professional fitment and precision wheel balancing to rapid puncture repairs, we make sure your vehicle operates at peak performance so you can keep moving with confidence.
+Drive in today for a full inspection and experience top-tier auto care.
+
+Get in Touch:
+📞 011 907 8495
+📍 26 St Columb Rd, New Redruth, Alberton, 1449
+🌐 http://albertontyreclinic.co.za/
+
+#AlbertonTyreClinic #TyreSafety #WheelAlignment #TyreFitment #Alberton #TyreCare #AutoRepair #NewRedruth #RoadSafety #GautengCars`
+      },
+      {
+        number: 2,
+        date: "Thursday, 28 May 2026",
+        shortDate: "28 May",
+        image: "understanding-market-value-is-your-power_page-0002.jpg",
+        downloadName: "atc_28May.jpg",
+        caption: `Your tyres are the only thing between your car and the road. Don't wait for a blowout to realize they need attention.
+
+At Alberton Tyre Clinic, we catch the warning signs before they become emergencies. Drop in for expert tread depth analysis, precision wheel balancing, and comprehensive safety inspections. Safety comes first—we deliver the professional expertise that keeps you moving securely on every road.
+Book your inspection today and drive with absolute peace of mind.
+
+Get in Touch:
+📞 011 907 8495
+📍 26 St Columb Rd, New Redruth, Alberton, 1449
+🌐 http://albertontyreclinic.co.za/
+
+#AlbertonTyreClinic #TyreInspection #TreadDepth #WheelBalancing #Alberton #RoadSafety #CarMaintenance #TyreExperts #NewRedruth #GautengAuto`
+      },
+      {
+        number: 3,
+        date: "Friday, 29 May 2026",
+        shortDate: "29 May",
+        image: "understanding-market-value-is-your-power_page-0003.jpg",
+        downloadName: "atc_29May.jpg",
+        caption: `Top-tier performance starts where the rubber meets the road.
+Don't compromise on the quality of your drive. As an authorized dealer for industry-leading brands like Pirelli, Michelin, Dunlop, and Bridgestone, Alberton Tyre Clinic delivers uncompromised quality and precision fitment. We pair premium components with expert installation to ensure total safety and maximum performance on every road.
+Visit us today to upgrade your ride with the best in the business.
+
+Get in Touch:
+📞 011 907 8495
+📍 26 St Columb Rd, New Redruth, Alberton, 1449
+🌐 http://albertontyreclinic.co.za/
+
+#AlbertonTyreClinic #PremiumTyres #Pirelli #Michelin #Dunlop #Bridgestone #TyreFitment #Alberton #NewRedruth #GautengAuto`
+      },
+      {
+        number: 4,
+        date: "Saturday, 30 May 2026",
+        shortDate: "30 May",
+        image: "understanding-market-value-is-your-power_page-0004.jpg",
+        downloadName: "atc_30May.jpg",
+        caption: `From timeless classics to modern luxury, your ride deserves the best.
+
+Great tyres aren't just for the latest models off the showroom floor. Whether you're preserving a vintage masterpiece or maintaining a brand-new daily driver, Alberton Tyre Clinic delivers the expert fitment and precision care your vehicle demands. Old school or brand new, we treat every car with the respect and expertise it deserves to ensure it performs flawlessly on the road.
+Bring your car in today for fitment that matches its pedigree.
+
+Get in Touch:
+📞 011 907 8495
+📍 26 St Columb Rd, New Redruth, Alberton, 1449
+🌐 http://albertontyreclinic.co.za/
+
+#AlbertonTyreClinic #ClassicCars #LuxuryCars #TyreFitment #AutoCare #Alberton #NewRedruth #CarMaintenance #GautengAuto #TyreExperts`
+      },
+      {
+        number: 5,
+        date: "Monday, 1 June 2026",
+        shortDate: "1 June",
+        image: "understanding-market-value-is-your-power_page-0005.jpg",
+        downloadName: "atc_01Jun.jpg",
+        caption: `When the tarmac ends, your tyres need to step up.
+
+Whether you’re navigating rocky trails, deep sand, or heavy mud, you need rubber that’s built for the tough stuff. At Alberton Tyre Clinic, we equip your 4x4 or bakkie with heavy-duty, all-terrain tyres designed for maximum durability and relentless grip. We provide the expert fitment and balancing needed to handle whatever the off-road throws at you.
+Gear up, get fitted, and dominate the terrain.
+
+Get in Touch:
+📞 011 907 8495
+📍 26 St Columb Rd, New Redruth, Alberton, 1449
+🌐 http://albertontyreclinic.co.za/
+
+#AlbertonTyreClinic #4x4SouthAfrica #OffRoad #AllTerrainTyres #BakkieLife #TyreFitment #Alberton #NewRedruth #Gauteng4x4 #MudAndSand`
+      }
+    ];
+
+    const calendar = document.getElementById("calendar");
+    const toast = document.getElementById("toast");
+    let toastTimer;
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2500);
+    }
+
+    function copyCaption(text, button) {
+      navigator.clipboard.writeText(text).then(() => {
+        button.classList.add("copied");
+        button.textContent = "Copied!";
+        showToast("Caption copied to clipboard!");
+        setTimeout(() => {
+          button.classList.remove("copied");
+          button.innerHTML = "&#128203; Copy Caption";
+        }, 2000);
+      }).catch(() => {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        showToast("Caption copied to clipboard!");
+      });
+    }
+
+    async function downloadImage(imagePath, filename) {
+      // Best-effort: try to force a real file download via Blob.
+      // If the browser blocks file:// fetch, fall back to a normal download link click.
+      try {
+        const res = await fetch(imagePath, { cache: "no-store" });
+        if (!res.ok) throw new Error("Fetch failed");
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename || "download.jpg";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        return;
+      } catch (_) {
+        const a = document.createElement("a");
+        a.href = imagePath;
+        a.download = filename || "download.jpg";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
+    }
+
+    posts.forEach((post) => {
+      const isPlaceholder = post.caption.startsWith("Caption coming soon");
+      const card = document.createElement("article");
+      card.className = "post-card";
+      card.innerHTML = `
+        <div class="post-header">
+          <span class="post-number">Post ${post.number}</span>
+          <div class="post-date">
+            <div class="day">${post.date}</div>
+            <div class="time">10:00 AM</div>
+          </div>
+        </div>
+        <div class="post-image-wrap">
+          <img src="${post.image}" alt="Post ${post.number} — Alberton Tyre Clinic">
+        </div>
+        <div class="post-body">
+          <div class="caption-label">Caption</div>
+          <div class="caption-box${isPlaceholder ? " placeholder" : ""}" id="caption-${post.number}">${post.caption}</div>
+          <div class="actions">
+            <button class="btn btn-download btn-download-js" data-image="${post.image}" data-filename="${post.downloadName}">
+              &#11015; Download Image
+            </button>
+            <button class="btn btn-copy" data-post="${post.number}">
+              &#128203; Copy Caption
+            </button>
+          </div>
+        </div>
+      `;
+      calendar.appendChild(card);
+    });
+
+    document.querySelectorAll(".btn-download-js").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const imagePath = button.dataset.image;
+        const filename = button.dataset.filename;
+        await downloadImage(imagePath, filename);
+      });
+    });
+
+    document.querySelectorAll(".btn-copy").forEach((button) => {
+      button.addEventListener("click", () => {
+        const postNum = button.dataset.post;
+        const captionEl = document.getElementById(`caption-${postNum}`);
+        copyCaption(captionEl.textContent, button);
+      });
+    });
+  </script>
+</body>
+</html>
