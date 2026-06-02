@@ -89,6 +89,23 @@
       gap: 1.5rem;
     }
 
+    .brand-section {
+      margin-bottom: 2rem;
+    }
+
+    .brand-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .brand-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--orange);
+      border-left: 4px solid var(--orange);
+      padding-left: 0.75rem;
+    }
+
     .post-card {
       background: var(--gray-900);
       border: 1px solid var(--gray-800);
@@ -278,7 +295,7 @@
   </header>
 
   <main>
-    <div class="calendar-grid" id="calendar"></div>
+    <div id="calendar-sections"></div>
   </main>
 
   <div class="toast" id="toast">Caption copied!</div>
@@ -287,10 +304,11 @@
     const posts = [
       {
         number: 1,
+        brand: "Alberton Tyre Clinic",
         date: "Tuesday, 2 June 2026",
         shortDate: "2 June",
-        image: "understanding-market-value-is-your-power_page-0001.jpg",
-        downloadName: "atc_02Jun.jpg",
+        image: "ATCGOODYEAR.jpg",
+        downloadName: "atc_02Jun_goodyear.jpg",
         caption: `Looking for EXPERT FITMENT on your Goodyear tyres? 🚗💨 You can trust the specialists at Alberton Tyre Clinic!
 
 We offer professional fitment, wheel balancing, and more for your Goodyear tyres, ensuring you stay safe on the road. Stop by or give us a call to book your appointment today!
@@ -303,10 +321,11 @@ We offer professional fitment, wheel balancing, and more for your Goodyear tyres
       },
       {
         number: 2,
+        brand: "Alberton Tyre Clinic",
         date: "Wednesday, 3 June 2026",
         shortDate: "3 June",
-        image: "understanding-market-value-is-your-power_page-0002.jpg",
-        downloadName: "atc_03Jun.jpg",
+        image: "ATCDUNLOP.jpg",
+        downloadName: "atc_03Jun_dunlop.jpg",
         caption: `Looking for premium performance? 🏎️💨
 
 Get the best out of your vehicle with Dunlop tyres. Expert fitment and replacement available now at Alberton Tyre Clinic! Contact us to see why Dunlop is a top choice.
@@ -320,53 +339,69 @@ Book your fitment today:
       },
       {
         number: 3,
+        brand: "Alberton Battery Mart",
         date: "Tuesday, 2 June 2026",
         shortDate: "2 June",
-        image: "understanding-market-value-is-your-power_page-0003.jpg",
-        downloadName: "abm_02Jun.jpg",
+        image: "ABM657.jpg",
+        downloadName: "abm_02Jun_657.jpg",
         caption: `Power Plus 657: Relentless Reliability.
+
 Engineered for those who don’t do downtime. Get the high-performance 72Ah power you need to stay on the road.
+
 R 1 950.00 | 24-Month Warranty
+
 📍 Visit us: 28 St Columb Rd, New Redruth, Alberton
 📞 Call: 010 109 6211
 💬 WhatsApp: 082 304 6926
 🌐 Shop online: https://www.albertonbatterymart.co.za/
+
 #AlbertonBatteryMart #PowerPlus #Alberton #CarBattery #AlbertonBusiness #ReliablePower`
       },
       {
         number: 4,
+        brand: "Alberton Battery Mart",
         date: "Wednesday, 3 June 2026",
         shortDate: "3 June",
-        image: "understanding-market-value-is-your-power_page-0004.jpg",
-        downloadName: "abm_03Jun.jpg",
+        image: "AMB658AGM.jpg",
+        downloadName: "abm_03Jun_658agm.jpg",
         caption: `Power Plus 658 AGM: Precision Power for Your BMW.
+
 Modern German engineering demands an electrical system that keeps up. The Power Plus 658 AGM provides the 900 CCA and 95Ah capacity required for high-performance vehicles.
+
 Note: BMS coding is required to ensure optimal battery health and vehicle integration.
+
 R 4 450.00 | 24-Month Warranty
+
 📍 Visit us: 28 St Columb Rd, New Redruth, Alberton
 📞 Call: 010 109 6211
 💬 WhatsApp: 082 304 6926
 🌐 Shop online: https://www.albertonbatterymart.co.za/
+
 #AlbertonBatteryMart #PowerPlus #BMWAlberton #AGM #GermanEngineering #Alberton #BMWMotorsport #CarBattery #BatteryTech`
       },
       {
         number: 5,
+        brand: "Alberton Battery Mart",
         date: "Thursday, 4 June 2026",
         shortDate: "4 June",
-        image: "understanding-market-value-is-your-power_page-0005.jpg",
-        downloadName: "abm_04Jun.jpg",
+        image: "ABM669.jpg",
+        downloadName: "abm_04Jun_669.jpg",
         caption: `Power Plus 669: Absolute Power.
+
 Built for the heavy hitters. Whether you're running a heavy-duty SUV or pushing your Isuzu bakkie to the limit, the 669 delivers a massive 900 CCA to ensure you never lose momentum.
+
 R 2 300.00 | 24-Month Warranty
+
 📍 Visit us: 28 St Columb Rd, New Redruth, Alberton
 📞 Call: 010 109 6211
 💬 WhatsApp: 082 304 6926
 Visit: https://www.albertonbatterymart.co.za/
+
 #AlbertonBatteryMart #PowerPlus #IsuzuSA #HeavyDutyPower #Alberton #IsuzuBakkie #OffroadReady #CarBattery #ReliablePerformance`
       }
     ];
 
-    const calendar = document.getElementById("calendar");
+    const calendarSections = document.getElementById("calendar-sections");
     const toast = document.getElementById("toast");
     let toastTimer;
 
@@ -398,8 +433,6 @@ Visit: https://www.albertonbatterymart.co.za/
     }
 
     async function downloadImage(imagePath, filename) {
-      // Best-effort: try to force a real file download via Blob.
-      // If the browser blocks file:// fetch, fall back to a normal download link click.
       try {
         const res = await fetch(imagePath, { cache: "no-store" });
         if (!res.ok) throw new Error("Fetch failed");
@@ -423,35 +456,55 @@ Visit: https://www.albertonbatterymart.co.za/
       }
     }
 
-    posts.forEach((post) => {
-      const isPlaceholder = post.caption.startsWith("Caption coming soon");
-      const card = document.createElement("article");
-      card.className = "post-card";
-      card.innerHTML = `
-        <div class="post-header">
-          <span class="post-number">Post ${post.number}</span>
-          <div class="post-date">
-            <div class="day">${post.date}</div>
-            <div class="time">10:00 AM</div>
-          </div>
-        </div>
-        <div class="post-image-wrap">
-          <img src="${post.image}" alt="Post ${post.number} — Alberton Campaign">
-        </div>
-        <div class="post-body">
-          <div class="caption-label">Caption</div>
-          <div class="caption-box${isPlaceholder ? " placeholder" : ""}" id="caption-${post.number}">${post.caption}</div>
-          <div class="actions">
-            <button class="btn btn-download btn-download-js" data-image="${post.image}" data-filename="${post.downloadName}">
-              &#11015; Download Image
-            </button>
-            <button class="btn btn-copy" data-post="${post.number}">
-              &#128203; Copy Caption
-            </button>
-          </div>
-        </div>
-      `;
-      calendar.appendChild(card);
+    const brands = ["Alberton Tyre Clinic", "Alberton Battery Mart"];
+
+    brands.forEach((brand) => {
+      const section = document.createElement("section");
+      section.className = "brand-section";
+
+      const title = document.createElement("h2");
+      title.className = "brand-title";
+      title.textContent = brand;
+      section.appendChild(title);
+
+      const grid = document.createElement("div");
+      grid.className = "calendar-grid";
+
+      posts
+        .filter((post) => post.brand === brand)
+        .forEach((post) => {
+          const isPlaceholder = post.caption.startsWith("Caption coming soon");
+          const card = document.createElement("article");
+          card.className = "post-card";
+          card.innerHTML = `
+            <div class="post-header">
+              <span class="post-number">Post ${post.number}</span>
+              <div class="post-date">
+                <div class="day">${post.date}</div>
+                <div class="time">10:00 AM</div>
+              </div>
+            </div>
+            <div class="post-image-wrap">
+              <img src="${post.image}" alt="Post ${post.number} — ${post.brand}">
+            </div>
+            <div class="post-body">
+              <div class="caption-label">Caption</div>
+              <div class="caption-box${isPlaceholder ? " placeholder" : ""}" id="caption-${post.number}">${post.caption}</div>
+              <div class="actions">
+                <button class="btn btn-download btn-download-js" data-image="${post.image}" data-filename="${post.downloadName}">
+                  &#11015; Download Image
+                </button>
+                <button class="btn btn-copy" data-post="${post.number}">
+                  &#128203; Copy Caption
+                </button>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+
+      section.appendChild(grid);
+      calendarSections.appendChild(section);
     });
 
     document.querySelectorAll(".btn-download-js").forEach((button) => {
