@@ -170,6 +170,20 @@
       display: block;
     }
 
+    .image-pending {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--gray-500);
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: 2px dashed var(--gray-700);
+    }
+
     .post-body {
       padding: 1.25rem;
       flex: 1;
@@ -287,9 +301,9 @@
       <h1>Alberton <span>Campaign</span> Calendar</h1>
       <p>Social Media Posting Calendar — June 2026</p>
       <div class="stats">
-        <div class="stat"><strong>5</strong> posts scheduled</div>
+        <div class="stat"><strong>6</strong> posts scheduled</div>
         <div class="stat">Post time: <strong>10:00 AM</strong> daily</div>
-        <div class="stat">2 June — 4 June 2026</div>
+        <div class="stat">2 June — 9 June 2026</div>
       </div>
     </div>
   </header>
@@ -336,6 +350,24 @@ Book your fitment today:
 🌐 https://www.albertontyreclinic.co.za/
 
 #AlbertonTyreClinic #DunlopTyres #TyreFitment #Alberton #DriveSafe`
+      },
+      {
+        number: 6,
+        brand: "Alberton Tyre Clinic",
+        date: "Tuesday, 9 June 2026",
+        shortDate: "9 June",
+        image: "ATC_MAXXIS_RAZR_9JUN.jpg",
+        imagePending: true,
+        downloadName: "atc_09Jun_maxxis_razr.jpg",
+        caption: `Structural dominance. The Maxxis RAZR AT811 delivers a 3-ply armour sidewall for severe terrain abuse with predictable 60/40 on-road discipline.
+
+Status: IN STOCK. Secure your set.
+
+📞 011 907 8495
+🌐 https://www.albertontyreclinic.co.za/
+📍 Alberton Tyre Clinic
+
+#MaxxisTires #RazrAT811 #AlbertonTyreClinic #Alberton #4x4SouthAfrica #OffRoadTires #TreadAggression #OverlandingSA`
       },
       {
         number: 3,
@@ -485,13 +517,15 @@ Visit: https://www.albertonbatterymart.co.za/
               </div>
             </div>
             <div class="post-image-wrap">
-              <img src="${post.image}" alt="Post ${post.number} — ${post.brand}">
+              ${post.imagePending
+                ? `<div class="image-pending">Image coming soon</div>`
+                : `<img src="${post.image}" alt="Post ${post.number} — ${post.brand}">`}
             </div>
             <div class="post-body">
               <div class="caption-label">Caption</div>
               <div class="caption-box${isPlaceholder ? " placeholder" : ""}" id="caption-${post.number}">${post.caption}</div>
               <div class="actions">
-                <button class="btn btn-download btn-download-js" data-image="${post.image}" data-filename="${post.downloadName}">
+                <button class="btn btn-download btn-download-js" data-image="${post.image}" data-filename="${post.downloadName}"${post.imagePending ? " disabled style=\"opacity:0.5;cursor:not-allowed\"" : ""}>
                   &#11015; Download Image
                 </button>
                 <button class="btn btn-copy" data-post="${post.number}">
